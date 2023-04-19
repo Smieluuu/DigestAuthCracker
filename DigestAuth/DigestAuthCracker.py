@@ -1,12 +1,17 @@
 from hashlib import md5, sha256, sha3_512, sha3_384, sha512, sha224, sha384, blake2b, blake2s 
 
-realm = "" # realm
-username = "" # username
-uri = "" # /path/to/file
-nonce = "" # nonce
+
+header = 'Authorization: Digest username="ericamiller",realm="pamela12@example.org", nonce="ba4c8a026b9b7eef872483089d3738ea6f827e898da8d0992effb2b5122ddf73", uri="/auth", qop=auth, response="1156aef0b43e273fc6f7d1141b6da55f3141bde8f0911c901a288ec18a043c7e", algorithm=SHA256'
+
+realm = header.split('realm="')[1].split('"')[0]
+username = header.split('username="')[1].split('"')[0]
+uri = header.split('uri="')[1].split('"')[0]
+nonce = header.split('nonce="')[1].split('"')[0]
+responseHeader = header.split('response="')[1].split('"')[0]
 
 with open('rockyou.txt', 'r', encoding=("latin-1")) as f:
     passwords = f.read().split("\n")
+
 
 funcions = [md5, sha256, sha3_512, sha3_384, sha512, sha224, sha384, blake2b, blake2s]
 methods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE']
@@ -14,22 +19,21 @@ methods = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'CONNECT', 'TRACE'
 for password in passwords:
     for function in funcions:
         for method in methods:
-            # username:realm:password
+                    # username:realm:password
             A1 = username + ':' + realm + ':' + password
             A1 = function(A1.encode('utf-8')).hexdigest()
 
-            # method:uri
+                    # method:uri
             A2 = method + ':' + uri
             A2 = function(A2.encode('utf-8')).hexdigest()
 
-            # response = function(A1:nonce:A2)
+                    # response = function(A1:nonce:A2)
             response = A1 + ':' + nonce + ':' + A2
             response = function(response.encode('utf-8')).hexdigest()
 
-            if response == '': # response
+            if response == responseHeader:
                 print("Password found: " + password)
                 print("Hash: " + response)
                 print("Function: " + function.__name__)
                 print("Method: " + method)
                 break
-
