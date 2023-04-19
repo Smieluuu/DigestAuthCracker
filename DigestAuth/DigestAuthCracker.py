@@ -1,7 +1,7 @@
 from hashlib import md5, sha256, sha3_512, sha3_384, sha512, sha224, sha384, blake2b, blake2s 
 
 
-header = 'Authorization: Digest username="ericamiller",realm="pamela12@example.org", nonce="ba4c8a026b9b7eef872483089d3738ea6f827e898da8d0992effb2b5122ddf73", uri="/auth", qop=auth, response="1156aef0b43e273fc6f7d1141b6da55f3141bde8f0911c901a288ec18a043c7e", algorithm=SHA256'
+header = 'Authorization: Digest username="...",realm="...", nonce="...", uri="/...", qop=..., response="...", algorithm=...'
 
 realm = header.split('realm="')[1].split('"')[0]
 username = header.split('username="')[1].split('"')[0]
